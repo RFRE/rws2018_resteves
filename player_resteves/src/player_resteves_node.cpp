@@ -131,6 +131,17 @@ class MyPlayer : public Player
         printReport();
     }
 
+    void move(void)
+    {
+        static tf::TransformBroadcaster br; // declares the broadcaster
+        tf::Transform transform; // declares the transformation object
+        transform.setOrigin( tf::Vector3(7, 7, 0.0) );
+        tf::Quaternion q;
+        q.setRPY(0, 0, M_PI/3);
+        transform.setRotation(q);
+        br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "resteves"));
+    }
+
     void printReport()
     {
         cout << "My name is " << name << " and my team is " << getTeam() << endl;
@@ -147,46 +158,30 @@ int main(int argc, char ** argv)
 {
     ros::init(argc, argv, "resteves");
 
-    rws_resteves::MyPlayer my_player("resteves", "red");
     ros::NodeHandle n;
 
-    string test_param_value;
-    vector<string> test_red;
+    rws_resteves::MyPlayer my_player("resteves", "blue");
+    
+    // string test_param_value;
+    // vector<string> test_red;
 
-    n.getParam("test_param", test_param_value);
-    n.getParam("team_red", test_red);
+    //n.getParam("test_param", test_param_value);
+    //n.getParam("team_red", test_red);
 
-    cout << "read test_param with value " << test_param_value << endl;
+    // cout << "read test_param with value " << test_param_value << endl;
 
-    for (int x = 0; x != test_red.size(); ++x)
+    // for (int x = 0; x != test_red.size(); ++x)
+    // {
+    //     cout << "Player " << x+1 << " name: " << test_red[x] << endl;
+    //     //cout << test_red.at(x) << "- calling at member" << endl;
+    // }
+    
+    ros::Rate loop_rate(10);
+    while(ros::ok())
     {
-        cout << "Player " << x+1 << " name: " << test_red[x] << endl;
-        //cout << test_red.at(x) << "- calling at member" << endl;
+        my_player.move();
+
+        ros::spinOnce();
+        loop_rate.sleep();
     }
-
-    static tf::TransformBroadcaster br; // declares the broadcaster
-    tf::Transform transform; // declares the transformation object
-    transform.setOrigin( tf::Vector3(7, 7, 0.0) );
-    tf::Quaternion q;
-    q.setRPY(0, 0, M_PI/3);
-    transform.setRotation(q);
-    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "resteves"));
-
-    ros::spin();
 }
-
-// #include <turtlesim/Pose.h>
-
-// std::string turtle_name;
-
-// int main(int argc, char** argv){
-//   ros::init(argc, argv, "my_tf_broadcaster");
-//   if (argc != 2){ROS_ERROR("need turtle name as argument"); return -1;};
-//   turtle_name = argv[1];
-
-//   ros::NodeHandle node;
-//   ros::Subscriber sub = node.subscribe(turtle_name+"/pose", 10, &poseCallback);
-
-//   ros::spin();
-//   return 0;
-// };
