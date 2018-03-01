@@ -6,6 +6,7 @@
 #include <ros/ros.h>
 
 #include <sstream>
+#include <rws2018_libs/team.h>
 
 // this way i don't have to write std::something all the time
 using namespace std;
@@ -68,48 +69,48 @@ class Player
 
 };
 
-class Team
-{
-    public: 
+// class Team
+// {
+//     public: 
       
-       /**
-       * @brief Constructor
-       * @param team_name the team name
-       */
-      Team(string team_name)
-      {
-        name = team_name; 
+//        /**
+//        * @brief Constructor
+//        * @param team_name the team name
+//        */
+//       Team(string team_name)
+//       {
+//         name = team_name; 
 
-      }
+//       }
 
-      /**
-       * @brief Prints the name of the team and the names of all its players
-       */
-      void printTeamInfo(void)
-      {
-        //Write code here ...
-      }
+//       /**
+//        * @brief Prints the name of the team and the names of all its players
+//        */
+//       void printTeamInfo(void)
+//       {
+//         //Write code here ...
+//       }
 
-      /**
-       * @brief Checks if a player belongs to the team
-       * @param player_name the name of the player to check
-       * @return true or false, yes or no
-       */
-      bool playerBelongsToTeam(string player_name)
-      {
-        //write code here ...
-      }
+//       /**
+//        * @brief Checks if a player belongs to the team
+//        * @param player_name the name of the player to check
+//        * @return true or false, yes or no
+//        */
+//       bool playerBelongsToTeam(string player_name)
+//       {
+//         //write code here ...
+//       }
 
-      /**
-       * @brief The team name
-       */
-      string name;
+//       /**
+//        * @brief The team name
+//        */
+//       string name;
 
-      /**
-       * @brief A list of the team's player names
-       */
-      vector<string> players;
-};
+//       /**
+//        * @brief A list of the team's player names
+//        */
+//       vector<string> players;
+// };
 
 class MyPlayer : public Player
 {
