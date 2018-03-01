@@ -1,11 +1,14 @@
+// system libraries
 #include <iostream>                                                                                     
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <sstream>
 
 // include ros libraries
 #include <ros/ros.h>
+#include <tf/transform_broadcaster.h>
 
-#include <sstream>
+// other libraries
 #include <rws2018_libs/team.h>
 
 // this way i don't have to write std::something all the time
@@ -112,6 +115,7 @@ class Player
 //       vector<string> players;
 // };
 
+// class MyPlayer inherited class Player's "methods"
 class MyPlayer : public Player
 {
     public:
@@ -160,5 +164,29 @@ int main(int argc, char ** argv)
         //cout << test_red.at(x) << "- calling at member" << endl;
     }
 
+    static tf::TransformBroadcaster br; // declares the broadcaster
+    tf::Transform transform; // declares the transformation object
+    transform.setOrigin( tf::Vector3(7, 7, 0.0) );
+    tf::Quaternion q;
+    q.setRPY(0, 0, M_PI/3);
+    transform.setRotation(q);
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "resteves"));
+
     ros::spin();
 }
+
+// #include <turtlesim/Pose.h>
+
+// std::string turtle_name;
+
+// int main(int argc, char** argv){
+//   ros::init(argc, argv, "my_tf_broadcaster");
+//   if (argc != 2){ROS_ERROR("need turtle name as argument"); return -1;};
+//   turtle_name = argv[1];
+
+//   ros::NodeHandle node;
+//   ros::Subscriber sub = node.subscribe(turtle_name+"/pose", 10, &poseCallback);
+
+//   ros::spin();
+//   return 0;
+// };
