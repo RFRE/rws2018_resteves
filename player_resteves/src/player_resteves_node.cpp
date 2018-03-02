@@ -104,7 +104,6 @@ namespace rws_resteves
             void printReport()
             {
                 //cout << "My name is " << name << " and my team is " << getTeamName() << endl;
-                ROS_INFO();
                 ROS_INFO("Player %s is on the %s team.", name.c_str(), getTeamName().c_str());
             }
     };
