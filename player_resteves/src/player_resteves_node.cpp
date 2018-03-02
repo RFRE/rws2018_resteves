@@ -17,140 +17,101 @@ using namespace std;
 namespace rws_resteves
 {
 
-class Player
-{
-    public:
-
-    Player(string argin_name)
+    class Player
     {
-        name = argin_name;
-    }
+        public:
 
-    //overloaded setter for team_name
-    int setTeamName(int index)
+            Player(string argin_name)
+            {
+                name = argin_name;
+            }
+
+            //overloaded setter for team_name
+            int setTeamName(int index)
+            {
+                if(index == 1)
+                {
+                    return setTeamName("red");
+                }
+                else if(index == 2)
+                {
+                    return setTeamName("green");
+                }
+                else if(index == 3)
+                {
+                    return setTeamName("blue");
+                }
+                else
+                {
+                    setTeamName("none");
+                }
+            }
+
+            // Setter for team_name
+            int setTeamName(string argin_team)
+            {
+                if(argin_team == "red" || argin_team == "green" || argin_team == "blue")
+                {
+                    team_name = argin_team;
+                    return 1;
+                }
+                else
+                {
+                    //cout << "Error: invalid color input: " << argin_team << endl;
+                    ROS_ERROR("Invalid color input: %s", argin_team.c_str());
+                    return 0;
+                }
+            }
+
+            string name;
+
+            // Getter of team_name
+            string getTeamName(void){return team_name;}
+
+        private:
+            string team_name;
+    };
+
+    // class MyPlayer inherited class Player's "methods"
+    class MyPlayer : public Player
     {
-        if(index == 1)
-        {
-            return setTeamName("red");
-        }
-        else if(index == 2)
-        {
-            return setTeamName("green");
-        }
-        else if(index == 3)
-        {
-            return setTeamName("blue");
-        }
-        else
-        {
-            cout << "Error: invalid color index input" << endl;
-            return 0;
-        }
-    }
+        public:
+            boost::shared_ptr<Team> red_team;
+            boost::shared_ptr<Team> green_team;
+            boost::shared_ptr<Team> blue_team;
+            tf::TransformBroadcaster br; //declare the broadcaster
 
-    // Setter for team_name
-    int setTeamName(string argin_team)
-    {
-        if(argin_team == "red" || argin_team == "green" || argin_team == "blue")
-        {
-            team_name = argin_team;
-            return 1;
-        }
-        else
-        {
-            cout << "Error: invalid color input: " << argin_team << endl;
-            return 0;
-        }
-    }
+            MyPlayer(string name, string team) : Player(name)
+            {
+               red_team = boost::shared_ptr<Team> (new Team("red"));
+                green_team = boost::shared_ptr<Team> (new Team("green"));
+                blue_team = boost::shared_ptr<Team> (new Team("blue"));
 
-    string name;
-    string getTeam(void){return team_name;}
+                setTeamName(team);
+                printReport();
+            }
 
-    private:
+            void move(void)
+            {
+                tf::Transform transform; //declare the transformation object
+                transform.setOrigin( tf::Vector3(7, 7, 0.0) );
+                tf::Quaternion q;
+                q.setRPY(0, 0, M_PI/3);
+                transform.setRotation(q);
+                br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "resteves"));
+            }
 
-    string team_name;
-
-};
-
-// class Team
-// {
-//     public: 
-      
-//        /**
-//        * @brief Constructor
-//        * @param team_name the team name
-//        */
-//       Team(string team_name)
-//       {
-//         name = team_name; 
-
-//       }
-
-//       /**
-//        * @brief Prints the name of the team and the names of all its players
-//        */
-//       void printTeamInfo(void)
-//       {
-//         //Write code here ...
-//       }
-
-//       /**
-//        * @brief Checks if a player belongs to the team
-//        * @param player_name the name of the player to check
-//        * @return true or false, yes or no
-//        */
-//       bool playerBelongsToTeam(string player_name)
-//       {
-//         //write code here ...
-//       }
-
-//       /**
-//        * @brief The team name
-//        */
-//       string name;
-
-//       /**
-//        * @brief A list of the team's player names
-//        */
-//       vector<string> players;
-// };
-
-// class MyPlayer inherited class Player's "methods"
-class MyPlayer : public Player
-{
-    public:
-
-    boost::shared_ptr<Team> red_team;
-    boost::shared_ptr<Team> green_team;
-    boost::shared_ptr<Team> blue_team;
-
-    MyPlayer(string name, string team) : Player(name)
-    {
-        
-        setTeamName(team);
-        printReport();
-    }
-
-    void move(void)
-    {
-        static tf::TransformBroadcaster br; // declares the broadcaster
-        tf::Transform transform; // declares the transformation object
-        transform.setOrigin( tf::Vector3(7, 7, 0.0) );
-        tf::Quaternion q;
-        q.setRPY(0, 0, M_PI/3);
-        transform.setRotation(q);
-        br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "resteves"));
-    }
-
-    void printReport()
-    {
-        cout << "My name is " << name << " and my team is " << getTeam() << endl;
-    }
-};
+            void printReport()
+            {
+                //cout << "My name is " << name << " and my team is " << getTeamName() << endl;
+                ROS_INFO();
+                ROS_INFO("Player %s is on the %s team.", name.c_str(), getTeamName().c_str());
+            }
+    };
 
 } // end of namespace
 
-// function overload
+// function overload example
 int somar(int a, int b){return a+b;}
 double somar(double a, double b){return a+b;}
 
