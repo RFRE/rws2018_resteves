@@ -94,7 +94,7 @@ namespace rws_resteves
             void move(void)
             {
                 tf::Transform transform; //declare the transformation object
-                transform.setOrigin( tf::Vector3(7, 7, 0.0) );
+                transform.setOrigin( tf::Vector3(-5, 7, 0.0) );
                 tf::Quaternion q;
                 q.setRPY(0, 0, M_PI/3);
                 transform.setRotation(q);
